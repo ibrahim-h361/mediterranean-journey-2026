@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Payment Plan — AKL to Milan to Tunis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #1a1a2e;
+      background: #f5f6fa;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    h1 { font-size: 1.7rem; margin-bottom: 4px; color: #0f3460; }
+    .subtitle { font-size: 0.95rem; color: #666; margin-bottom: 20px; }
+
+    /* ===== TOP CONTROLS BAR ===== */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    /* View toggle */
+    .view-toggle {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #0f3460;
+    }
+    .view-toggle button {
+      padding: 7px 18px;
+      border: none;
+      background: #fff;
+      color: #0f3460;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .view-toggle button.active { background: #0f3460; color: #fff; }
+    .view-toggle button:hover:not(.active) { background: #e8ecf4; }
+
+    /* Currency bar */
+    .currency-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f0f2f8;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .currency-bar label { font-size: 0.82rem; font-weight: 600; color: #444; }
+    .currency-toggle {
+      display: flex; border-radius: 8px; overflow: hidden; border: 2px solid #0f3460;
+    }
+    .currency-toggle button {
+      padding: 7px 20px; border: none; background: #fff; color: #0f3460;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+    }
+    .currency-toggle button.active { background: #0f3460; color: #fff; }
+    .currency-toggle button:hover:not(.active) { background: #e8ecf4; }
+    .refresh-btn {
+      display: flex; align-items: center; gap: 6px; padding: 7px 16px;
+      border: 2px solid #27ae60; border-radius: 8px; background: #fff; color: #27ae60;
+      font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+    }
+    .refresh-btn:hover { background: #27ae60; color: #fff; }
+    .refresh-btn.loading { opacity: 0.5; pointer-events: none; }
+    .refresh-btn svg { width: 16px; height: 16px; }
+    .refresh-btn.loading svg { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .rate-info { font-size: 0.78rem; color: #888; margin-left: auto; }
+    .rate-info strong { color: #0f3460; }
+
+    /* ===== SIMPLE VIEW ===== */
+    .simple-hero {
+      text-align: center;
+      padding: 30px 0 10px;
+    }
+    .simple-hero .flight-route {
+      font-size: 1.1rem;
+      color: #888;
+      margin-bottom: 24px;
+    }
+    .simple-hero .flight-route span {
+      display: inline-block;
+      background: #f0f2f8;
+      border-radius: 6px;
+      padding: 2px 10px;
+      margin: 0 4px;
+      color: #0f3460;
+      font-weight: 600;
+    }
+    .simple-total-card {
+      background: #0f3460;
+      border-radius: 14px;
+      padding: 28px 30px;
+      color: #fff;
+      display: inline-block;
+      margin-bottom: 32px;
+    }
+    .simple-total-card .label { font-size: 0.8rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.06em; }
+    .simple-total-card .amount { font-size: 2.4rem; font-weight: 700; margin: 4px 0; }
+    .simple-total-card .sub { font-size: 0.85rem; opacity: 0.7; }
+
+    .simple-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .simple-opt {
+      border: 2px solid #e0e4ef;
+      border-radius: 14px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .simple-opt:hover { border-color: #0f3460; transform: translateY(-2px); }
+    .simple-opt.active { border-color: #0f3460; box-shadow: 0 4px 20px rgba(15,52,96,0.18); transform: translateY(-2px); }
+    .simple-opt .s-badge {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; padding: 3px 14px; border-radius: 10px; color: #fff; white-space: nowrap;
+    }
+    .simple-opt:nth-child(1) .s-badge { background: #e74c3c; }
+    .simple-opt:nth-child(2) .s-badge { background: #f39c12; }
+    .simple-opt:nth-child(3) .s-badge { background: #27ae60; }
+    .simple-opt .s-duration { font-size: 0.85rem; color: #888; margin-top: 8px; margin-bottom: 12px; }
+    .simple-opt .s-amount { font-size: 2rem; font-weight: 700; color: #0f3460; }
+    .simple-opt .s-label { font-size: 0.78rem; color: #888; margin-bottom: 4px; }
+    .simple-opt .s-per-person { font-size: 0.82rem; color: #555; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; }
+    .simple-opt .s-per-person strong { color: #0f3460; font-size: 1.05rem; }
+
+    .simple-summary {
+      background: #f8f9fc;
+      border-radius: 12px;
+      padding: 24px 28px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .simple-summary .s-msg {
+      font-size: 1.05rem;
+      color: #444;
+      line-height: 1.7;
+    }
+    .simple-summary .s-msg strong { color: #0f3460; }
+    .simple-summary .s-msg .highlight {
+      display: inline-block;
+      background: #0f3460;
+      color: #fff;
+      padding: 2px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+
+    /* ===== ADVANCED VIEW (existing styles) ===== */
+    .summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 36px; }
+    .summary-card { border: 1px solid #e0e4ef; border-radius: 10px; padding: 18px 20px; text-align: center; background: #fafbff; }
+    .summary-card h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 4px; }
+    .summary-card .val { font-size: 1.4rem; font-weight: 700; color: #0f3460; }
+    .summary-card .det { font-size: 0.78rem; color: #aaa; margin-top: 2px; }
+    .summary-card.grand { background: #0f3460; border-color: #0f3460; }
+    .summary-card.grand h3, .summary-card.grand .det { color: rgba(255,255,255,0.6); }
+    .summary-card.grand .val { color: #fff; }
+
+    .section-title { font-size: 1.05rem; font-weight: 600; color: #0f3460; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #0f3460; }
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 0.88rem; }
+    th { text-align: left; padding: 9px 10px; background: #f0f2f8; font-weight: 600; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.03em; color: #555; }
+    td { padding: 9px 10px; border-bottom: 1px solid #eee; }
+    .r { text-align: right; font-variant-numeric: tabular-nums; }
+    .total-row td { font-weight: 700; border-top: 2px solid #0f3460; border-bottom: 2px solid #0f3460; background: #f8f9fc; }
+    .fee-row td { color: #999; font-style: italic; }
+    .route-sub { font-size: 0.75rem; color: #999; display: block; }
+
+    .visuals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 36px; }
+    .visual-card { border: 1px solid #e0e4ef; border-radius: 12px; padding: 20px; background: #fafbff; }
+    .visual-card.full-width { grid-column: 1 / -1; }
+    .visual-card h3 { font-size: 0.85rem; font-weight: 600; color: #0f3460; margin-bottom: 14px; }
+    .chart-wrap { position: relative; width: 100%; }
+    .chart-wrap.donut { max-width: 280px; margin: 0 auto; }
+
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+    .option-card { border: 2px solid #dde; border-radius: 12px; padding: 22px 16px; text-align: center; position: relative; cursor: pointer; transition: all 0.25s; background: #fff; }
+    .option-card:hover { border-color: #0f3460; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(15,52,96,0.1); }
+    .option-card.active { border-color: #0f3460; box-shadow: 0 4px 20px rgba(15,52,96,0.18); transform: translateY(-2px); }
+    .option-card .badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 14px; border-radius: 10px; white-space: nowrap; }
+    .option-card.opt-a .badge { background: #e74c3c; }
+    .option-card.opt-b .badge { background: #f39c12; }
+    .option-card.opt-c .badge { background: #27ae60; }
+    .option-card h3 { font-size: 0.95rem; color: #0f3460; margin-bottom: 2px; margin-top: 8px; }
+    .option-card .period { font-size: 0.78rem; color: #888; margin-bottom: 14px; }
+    .option-card .big-amount { font-size: 1.55rem; font-weight: 700; color: #1a1a2e; }
+    .option-card .per-label { font-size: 0.72rem; color: #888; margin-bottom: 10px; }
+    .option-card .each { font-size: 1rem; font-weight: 600; color: #0f3460; }
+    .option-card .each-label { font-size: 0.7rem; color: #999; }
+    .option-card .monthly-eq { font-size: 0.75rem; color: #888; margin-top: 12px; padding-top: 10px; border-top: 1px solid #eee; }
+
+    .person-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 32px; }
+    .person-card { border: 1px solid #e0e4ef; border-radius: 10px; padding: 16px 18px; text-align: center; background: #fafbff; }
+    .person-card h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: #888; margin-bottom: 4px; }
+    .person-card .amt { font-size: 1.2rem; font-weight: 700; color: #0f3460; }
+    .person-card .det { font-size: 0.75rem; color: #999; margin-top: 2px; }
+
+    .schedule-section { margin-bottom: 40px; }
+    .schedule-section .sched-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #0f3460; }
+    .schedule-section .sched-header h2 { font-size: 1.05rem; font-weight: 600; color: #0f3460; }
+    .schedule-section .sched-header .option-label { font-size: 0.8rem; color: #888; }
+    .sched-table tbody tr:nth-child(even) { background: #fafbfd; }
+    .sched-table tr.paid-off td { background: #e8f5e9; }
+    .sched-note { font-size: 0.78rem; color: #999; margin-top: -20px; margin-bottom: 24px; }
+
+    footer { text-align: center; font-size: 0.72rem; color: #ccc; margin-top: 40px; padding-top: 14px; border-top: 1px solid #eee; }
+
+    /* Hide/show */
+    .hidden { display: none !important; }
+
+    @media print {
+      body { padding: 10px; background: #fff; }
+      .container { box-shadow: none; padding: 20px; }
+      .option-card:hover, .simple-opt:hover { transform: none; }
+      .option-card.active { transform: none; border-color: #0f3460 !important; }
+      .simple-opt.active { transform: none; border-color: #0f3460 !important; }
+      .sched-table tbody tr:nth-child(even), .sched-table tr.paid-off td,
+      th, .total-row td, .summary-card, .summary-card.grand,
+      .option-card .badge, .visual-card, .currency-toggle button.active,
+      .view-toggle button.active, .simple-total-card, .simple-opt .s-badge,
+      .simple-summary { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .sched-table td, .sched-table th { padding: 5px 7px; font-size: 0.78rem; }
+    }
+
+    @media (max-width: 700px) {
+      .summary-row, .options-grid, .simple-options { grid-template-columns: 1fr; }
+      .visuals-grid, .person-split { grid-template-columns: 1fr; }
+      .currency-bar, .controls-bar { flex-direction: column; align-items: flex-start; }
+      .rate-info { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Flight Payment Plan</h1>
+  <p class="subtitle">Auckland &rarr; Hong Kong &rarr; Milan &rarr; Tunis &nbsp;|&nbsp; Fortnightly repayment</p>
+
+  <!-- Top controls -->
+  <div class="controls-bar">
+    <div class="view-toggle">
+      <button id="btn-simple" class="active" onclick="setView('simple')">Simple View</button>
+      <button id="btn-advanced" onclick="setView('advanced')">Advanced View</button>
+    </div>
+  </div>
+
+  <!-- Currency bar -->
+  <div class="currency-bar">
+    <label>Currency:</label>
+    <div class="currency-toggle">
+      <button id="btn-usd" class="active" onclick="setCurrency('USD')">USD $</button>
+      <button id="btn-nzd" onclick="setCurrency('NZD')">NZD $</button>
+    </div>
+    <button class="refresh-btn" id="refresh-btn" onclick="fetchRate()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 4v6h6"/><path d="M23 20v-6h-6"/>
+        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+      </svg>
+      <span id="refresh-label">Refresh Rate</span>
+    </button>
+    <span class="rate-info" id="rate-info">1 USD = <strong id="rate-display">—</strong> NZD &nbsp;|&nbsp; <span id="rate-time">fetching...</span></span>
+  </div>
+
+  <!-- ==================== SIMPLE VIEW ==================== -->
+  <div id="view-simple">
+    <div class="simple-hero">
+      <div class="flight-route">
+        <span>Auckland</span> &rarr; <span>Hong Kong</span> &rarr; <span>Milan</span> &rarr; <span>Tunis</span>
+      </div>
+      <div class="simple-total-card">
+        <div class="label">Total Trip Cost (incl. 5% fee)</div>
+        <div class="amount" id="simple-total"></div>
+        <div class="sub" id="simple-total-sub">Cathay Pacific + ITA Airways</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Pick a Payment Plan</h2>
+    <div class="simple-options">
+      <div class="simple-opt" id="sopt-a" onclick="pickSimple('a')">
+        <div class="s-badge">6 Months</div>
+        <div class="s-duration">13 fortnights</div>
+        <div class="s-label">Each of us pays</div>
+        <div class="s-amount" id="sopt-a-each"></div>
+        <div class="s-label">per fortnight</div>
+        <div class="s-per-person">Combined: <strong id="sopt-a-combined"></strong></div>
+      </div>
+      <div class="simple-opt" id="sopt-b" onclick="pickSimple('b')">
+        <div class="s-badge">9 Months</div>
+        <div class="s-duration">20 fortnights</div>
+        <div class="s-label">Each of us pays</div>
+        <div class="s-amount" id="sopt-b-each"></div>
+        <div class="s-label">per fortnight</div>
+        <div class="s-per-person">Combined: <strong id="sopt-b-combined"></strong></div>
+      </div>
+      <div class="simple-opt active" id="sopt-c" onclick="pickSimple('c')">
+        <div class="s-badge">12 Months</div>
+        <div class="s-duration">26 fortnights</div>
+        <div class="s-label">Each of us pays</div>
+        <div class="s-amount" id="sopt-c-each"></div>
+        <div class="s-label">per fortnight</div>
+        <div class="s-per-person">Combined: <strong id="sopt-c-combined"></strong></div>
+      </div>
+    </div>
+
+    <div class="simple-summary" id="simple-summary"></div>
+
+    <!-- Simple view also shows the schedule for the selected option -->
+    <div id="simple-schedule-a" class="schedule-section hidden">
+      <div class="sched-header"><h2>Payment Schedule</h2><span class="option-label">6 months / 13 fortnights</span></div>
+      <table class="sched-table" id="stable-a">
+        <thead><tr><th>#</th><th>Due Date</th><th class="r">Each Pays</th><th class="r">Remaining</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="simple-schedule-b" class="schedule-section hidden">
+      <div class="sched-header"><h2>Payment Schedule</h2><span class="option-label">9 months / 20 fortnights</span></div>
+      <table class="sched-table" id="stable-b">
+        <thead><tr><th>#</th><th>Due Date</th><th class="r">Each Pays</th><th class="r">Remaining</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="simple-schedule-c" class="schedule-section hidden">
+      <div class="sched-header"><h2>Payment Schedule</h2><span class="option-label">12 months / 26 fortnights</span></div>
+      <table class="sched-table" id="stable-c">
+        <thead><tr><th>#</th><th>Due Date</th><th class="r">Each Pays</th><th class="r">Remaining</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== ADVANCED VIEW ==================== -->
+  <div id="view-advanced" class="hidden">
+
+    <div class="summary-row">
+      <div class="summary-card">
+        <h3>Flights Subtotal</h3>
+        <div class="val" id="sum-subtotal"></div>
+        <div class="det" id="sum-subtotal-det">USD before fees</div>
+      </div>
+      <div class="summary-card">
+        <h3>5% Transfer Fee</h3>
+        <div class="val" id="sum-fee"></div>
+        <div class="det">Applied to total</div>
+      </div>
+      <div class="summary-card grand">
+        <h3>Grand Total</h3>
+        <div class="val" id="sum-grand"></div>
+        <div class="det" id="sum-grand-det">Amount to repay</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Flight Cost Breakdown</h2>
+    <table>
+      <thead><tr><th>Airline</th><th>Route</th><th class="r" id="cost-col-header">Cost (USD)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Cathay Pacific</td>
+          <td>Auckland &rarr; Hong Kong &rarr; Milan <span class="route-sub">AKL &rarr; HKG &rarr; MXP</span></td>
+          <td class="r" id="cost-cathay"></td>
+        </tr>
+        <tr>
+          <td>ITA Airways</td>
+          <td>Milan &rarr; Tunis <span class="route-sub">MXP &rarr; TUN</span></td>
+          <td class="r" id="cost-ita"></td>
+        </tr>
+        <tr class="fee-row"><td colspan="2">5% transfer fee</td><td class="r" id="cost-fee"></td></tr>
+        <tr class="total-row"><td colspan="2">Total to Repay</td><td class="r" id="cost-total"></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Visual Overview</h2>
+    <div class="visuals-grid">
+      <div class="visual-card">
+        <h3>1. Where Your Money Goes</h3>
+        <div class="chart-wrap donut"><canvas id="donutChart"></canvas></div>
+      </div>
+      <div class="visual-card">
+        <h3>2. Fortnightly Payment Comparison</h3>
+        <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+      </div>
+      <div class="visual-card full-width">
+        <h3>3. Balance Paydown Over Time</h3>
+        <div class="chart-wrap" style="height: 320px;"><canvas id="lineChart"></canvas></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Choose Your Repayment Option</h2>
+    <div class="options-grid">
+      <div class="option-card opt-a" id="opt-a" onclick="showSchedule('a')">
+        <div class="badge">Fastest Payoff</div>
+        <h3>Option A</h3>
+        <p class="period">6 months &middot; 13 fortnights</p>
+        <div class="big-amount" id="opt-a-combined"></div>
+        <div class="per-label">per fortnight (combined)</div>
+        <div class="each" id="opt-a-each"></div>
+        <div class="each-label">each per fortnight</div>
+        <div class="monthly-eq" id="opt-a-monthly"></div>
+      </div>
+      <div class="option-card opt-b" id="opt-b" onclick="showSchedule('b')">
+        <div class="badge">Balanced</div>
+        <h3>Option B</h3>
+        <p class="period">9 months &middot; 20 fortnights</p>
+        <div class="big-amount" id="opt-b-combined"></div>
+        <div class="per-label">per fortnight (combined)</div>
+        <div class="each" id="opt-b-each"></div>
+        <div class="each-label">each per fortnight</div>
+        <div class="monthly-eq" id="opt-b-monthly"></div>
+      </div>
+      <div class="option-card opt-c active" id="opt-c" onclick="showSchedule('c')">
+        <div class="badge">Most Comfortable</div>
+        <h3>Option C</h3>
+        <p class="period">12 months &middot; 26 fortnights</p>
+        <div class="big-amount" id="opt-c-combined"></div>
+        <div class="per-label">per fortnight (combined)</div>
+        <div class="each" id="opt-c-each"></div>
+        <div class="each-label">each per fortnight</div>
+        <div class="monthly-eq" id="opt-c-monthly"></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Per Person Split</h2>
+    <div class="person-split">
+      <div class="person-card"><h4>You</h4><div class="amt" id="you-amt"></div><div class="det" id="you-total"></div></div>
+      <div class="person-card"><h4>Your Wife</h4><div class="amt" id="wife-amt"></div><div class="det" id="wife-total"></div></div>
+    </div>
+
+    <div id="schedule-a" class="schedule-section hidden">
+      <div class="sched-header"><h2>Payment Schedule</h2><span class="option-label">Option A &mdash; 6 months / 13 fortnights</span></div>
+      <p class="sched-note" id="sched-note-a"></p>
+      <table class="sched-table" id="table-a">
+        <thead><tr><th>#</th><th>Due Date</th><th class="r">Payment</th><th class="r">Each Pays</th><th class="r">Remaining</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="schedule-b" class="schedule-section hidden">
+      <div class="sched-header"><h2>Payment Schedule</h2><span class="option-label">Option B &mdash; 9 months / 20 fortnights</span></div>
+      <p class="sched-note" id="sched-note-b"></p>
+      <table class="sched-table" id="table-b">
+        <thead><tr><th>#</th><th>Due Date</th><th class="r">Payment</th><th class="r">Each Pays</th><th class="r">Remaining</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="schedule-c" class="schedule-section hidden">
+      <div class="sched-header"><h2>Payment Schedule</h2><span class="option-label">Option C &mdash; 12 months / 26 fortnights</span></div>
+      <p class="sched-note" id="sched-note-c"></p>
+      <table class="sched-table" id="table-c">
+        <thead><tr><th>#</th><th>Due Date</th><th class="r">Payment</th><th class="r">Each Pays</th><th class="r">Remaining</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div><!-- /advanced -->
+
+  <footer>Generated March 2026 &nbsp;|&nbsp; Dates are approximate &nbsp;|&nbsp; Exchange rates via open.er-api.com</footer>
+
+</div>
+
+<script>
+  // ===== BASE DATA (USD) =====
+  const BASE = {
+    cathay: 3113.89,
+    ita: 1136.20,
+    get subtotal() { return this.cathay + this.ita; },
+    get fee() { return Math.round(this.subtotal * 0.05 * 100) / 100; },
+    get total() { return Math.round((this.subtotal + this.fee) * 100) / 100; },
+  };
+  const OPT_DEF = {
+    a: { fortnights: 13, color: '#e74c3c', label: 'A: 6 months', months: 6 },
+    b: { fortnights: 20, color: '#f39c12', label: 'B: 9 months', months: 9 },
+    c: { fortnights: 26, color: '#27ae60', label: 'C: 12 months', months: 12 },
+  };
+  const START = new Date(2026, 2, 27);
+
+  let currentCurrency = 'USD';
+  let nzdRate = null;
+  let activeOption = 'c';
+  let currentView = 'simple';
+  let donutChart, barChart, lineChart;
+  let chartsInitialized = false;
+
+  function r() { return currentCurrency === 'NZD' && nzdRate ? nzdRate : 1; }
+  function s() { return currentCurrency === 'NZD' ? 'NZ$' : '$'; }
+  function fmt(usdVal) {
+    const v = Math.round(usdVal * r() * 100) / 100;
+    return s() + v.toLocaleString('en-NZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function optCalc(key) {
+    const total = BASE.total * r();
+    const n = OPT_DEF[key].fortnights;
+    const payment = Math.round(total / n * 100) / 100;
+    const each = Math.round(payment / 2 * 100) / 100;
+    const monthly = Math.round(total / OPT_DEF[key].months * 100) / 100;
+    return { fortnights: n, payment, each, monthly, total: Math.round(total * 100) / 100 };
+  }
+
+  // ===== VIEW TOGGLE =====
+  function setView(view) {
+    currentView = view;
+    document.getElementById('btn-simple').classList.toggle('active', view === 'simple');
+    document.getElementById('btn-advanced').classList.toggle('active', view === 'advanced');
+    document.getElementById('view-simple').classList.toggle('hidden', view !== 'simple');
+    document.getElementById('view-advanced').classList.toggle('hidden', view !== 'advanced');
+    if (view === 'advanced' && !chartsInitialized) {
+      chartsInitialized = true;
+      renderCharts();
+    }
+    renderAll();
+  }
+
+  // ===== CURRENCY =====
+  async function fetchRate() {
+    const btn = document.getElementById('refresh-btn');
+    const label = document.getElementById('refresh-label');
+    btn.classList.add('loading');
+    label.textContent = 'Fetching...';
+    try {
+      const res = await fetch('https://open.er-api.com/v6/latest/USD');
+      const data = await res.json();
+      if (data.result === 'success' && data.rates && data.rates.NZD) {
+        nzdRate = data.rates.NZD;
+        document.getElementById('rate-display').textContent = nzdRate.toFixed(4);
+        document.getElementById('rate-time').textContent =
+          'updated ' + new Date().toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' });
+        renderAll();
+      }
+    } catch (e) {
+      document.getElementById('rate-time').textContent = 'fetch failed — try again';
+    }
+    btn.classList.remove('loading');
+    label.textContent = 'Refresh Rate';
+  }
+
+  function setCurrency(c) {
+    currentCurrency = c;
+    document.getElementById('btn-usd').classList.toggle('active', c === 'USD');
+    document.getElementById('btn-nzd').classList.toggle('active', c === 'NZD');
+    if (c === 'NZD' && !nzdRate) { fetchRate(); return; }
+    renderAll();
+  }
+
+  // ===== RENDER =====
+  function renderAll() {
+    renderSimple();
+    renderAdvanced();
+  }
+
+  // --- Simple view ---
+  function renderSimple() {
+    document.getElementById('simple-total').textContent = fmt(BASE.total);
+
+    ['a','b','c'].forEach(k => {
+      const o = optCalc(k);
+      document.getElementById(`sopt-${k}-each`).textContent = s() + o.each.toFixed(2);
+      document.getElementById(`sopt-${k}-combined`).textContent = s() + o.payment.toFixed(2);
+    });
+
+    updateSimpleSummary();
+    buildSimpleTable(activeOption);
+  }
+
+  function updateSimpleSummary() {
+    const o = optCalc(activeOption);
+    const dur = OPT_DEF[activeOption].months;
+    document.getElementById('simple-summary').innerHTML = `
+      <div class="s-msg">
+        Over <strong>${dur} months</strong> (${o.fortnights} fortnights), each of us puts in
+        <span class="highlight">${s()}${o.each.toFixed(2)}</span> per fortnight.<br>
+        That's <strong>${s()}${o.payment.toFixed(2)}</strong> combined every two weeks until it's paid off.
+      </div>
+    `;
+  }
+
+  function pickSimple(key) {
+    activeOption = key;
+    document.querySelectorAll('.simple-opt').forEach(c => c.classList.remove('active'));
+    document.getElementById('sopt-' + key).classList.add('active');
+    // Also sync advanced view
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('opt-' + key).classList.add('active');
+
+    ['a','b','c'].forEach(k => {
+      document.getElementById('simple-schedule-' + k).classList.toggle('hidden', k !== key);
+      document.getElementById('schedule-' + k).classList.toggle('hidden', k !== key);
+    });
+
+    updateSimpleSummary();
+    buildSimpleTable(key);
+    rebuildAdvancedTable(key);
+    updatePersonSplit();
+  }
+
+  function buildSimpleTable(key) {
+    const o = optCalc(key);
+    const tbody = document.querySelector(`#stable-${key} tbody`);
+    tbody.innerHTML = '';
+    let balance = o.total;
+    for (let i = 1; i <= o.fortnights; i++) {
+      const d = new Date(START);
+      d.setDate(START.getDate() + (i - 1) * 14);
+      let each;
+      if (i < o.fortnights) {
+        each = o.each;
+        balance = Math.round((balance - o.payment) * 100) / 100;
+      } else {
+        each = Math.round(balance / 2 * 100) / 100;
+        balance = 0;
+      }
+      const tr = document.createElement('tr');
+      if (balance === 0) tr.classList.add('paid-off');
+      const dateStr = d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
+      tr.innerHTML = `
+        <td>${i}</td>
+        <td>${dateStr}</td>
+        <td class="r">${s()}${each.toFixed(2)}</td>
+        <td class="r">${balance === 0 ? '<strong>' + s() + '0.00 &#10003;</strong>' : s() + balance.toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+    // Show this schedule
+    ['a','b','c'].forEach(k => {
+      document.getElementById('simple-schedule-' + k).classList.toggle('hidden', k !== key);
+    });
+  }
+
+  // --- Advanced view ---
+  function renderAdvanced() {
+    const cur = currentCurrency;
+    document.getElementById('sum-subtotal').textContent = fmt(BASE.subtotal);
+    document.getElementById('sum-subtotal-det').textContent = cur + ' before fees';
+    document.getElementById('sum-fee').textContent = fmt(BASE.fee);
+    document.getElementById('sum-grand').textContent = fmt(BASE.total);
+    document.getElementById('sum-grand-det').textContent = 'Amount to repay (' + cur + ')';
+    document.getElementById('cost-col-header').textContent = 'Cost (' + cur + ')';
+    document.getElementById('cost-cathay').textContent = fmt(BASE.cathay);
+    document.getElementById('cost-ita').textContent = fmt(BASE.ita);
+    document.getElementById('cost-fee').textContent = fmt(BASE.fee);
+    document.getElementById('cost-total').textContent = fmt(BASE.total);
+
+    ['a','b','c'].forEach(k => {
+      const o = optCalc(k);
+      document.getElementById(`opt-${k}-combined`).textContent = s() + o.payment.toFixed(2);
+      document.getElementById(`opt-${k}-each`).textContent = s() + o.each.toFixed(2);
+      document.getElementById(`opt-${k}-monthly`).innerHTML = '&asymp; ' + s() + o.monthly.toFixed(2) + ' / month';
+      document.getElementById(`sched-note-${k}`).textContent =
+        `${s()}${o.payment.toFixed(2)} per fortnight (${s()}${o.each.toFixed(2)} each). Final payment adjusted to clear balance.`;
+    });
+
+    updatePersonSplit();
+    rebuildAdvancedTable(activeOption);
+
+    if (chartsInitialized) renderCharts();
+  }
+
+  function updatePersonSplit() {
+    const o = optCalc(activeOption);
+    const totalC = o.total;
+    const half1 = Math.ceil(totalC * 100 / 2) / 100;
+    const half2 = Math.floor(totalC * 100 / 2) / 100;
+    document.getElementById('you-amt').textContent = `${s()}${o.each.toFixed(2)} / fortnight`;
+    document.getElementById('you-total').textContent = `${s()}${half1.toFixed(2)} total over ${o.fortnights} fortnights`;
+    document.getElementById('wife-amt').textContent = `${s()}${o.each.toFixed(2)} / fortnight`;
+    document.getElementById('wife-total').textContent = `${s()}${half2.toFixed(2)} total over ${o.fortnights} fortnights`;
+  }
+
+  function rebuildAdvancedTable(key) {
+    const o = optCalc(key);
+    const tbody = document.querySelector(`#table-${key} tbody`);
+    tbody.innerHTML = '';
+    let balance = o.total;
+    for (let i = 1; i <= o.fortnights; i++) {
+      const d = new Date(START);
+      d.setDate(START.getDate() + (i - 1) * 14);
+      let payment, each;
+      if (i < o.fortnights) {
+        payment = o.payment; each = o.each;
+        balance = Math.round((balance - payment) * 100) / 100;
+      } else {
+        payment = balance; each = Math.round(payment / 2 * 100) / 100;
+        balance = 0;
+      }
+      const tr = document.createElement('tr');
+      if (balance === 0) tr.classList.add('paid-off');
+      const dateStr = d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
+      tr.innerHTML = `
+        <td>${i}</td><td>${dateStr}</td>
+        <td class="r">${s()}${payment.toFixed(2)}</td>
+        <td class="r">${s()}${each.toFixed(2)}</td>
+        <td class="r">${balance === 0 ? '<strong>' + s() + '0.00 &#10003;</strong>' : s() + balance.toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+    ['a','b','c'].forEach(k => {
+      document.getElementById('schedule-' + k).classList.toggle('hidden', k !== key);
+    });
+  }
+
+  function showSchedule(key) {
+    activeOption = key;
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('opt-' + key).classList.add('active');
+    document.querySelectorAll('.simple-opt').forEach(c => c.classList.remove('active'));
+    document.getElementById('sopt-' + key).classList.add('active');
+    rebuildAdvancedTable(key);
+    buildSimpleTable(key);
+    updatePersonSplit();
+    updateSimpleSummary();
+  }
+
+  // ===== CHARTS =====
+  function renderCharts() {
+    const sym = s(), cur = currentCurrency;
+    const totalC = Math.round(BASE.total * r() * 100) / 100;
+    if (donutChart) donutChart.destroy();
+    if (barChart) barChart.destroy();
+    if (lineChart) lineChart.destroy();
+
+    donutChart = new Chart(document.getElementById('donutChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Cathay Pacific (AKL→HKG→MXP)', 'ITA Airways (MXP→TUN)', 'Transfer Fee (5%)'],
+        datasets: [{ data: [BASE.cathay, BASE.ita, BASE.fee].map(v => Math.round(v * r() * 100) / 100), backgroundColor: ['#0f3460','#3a86ff','#e0e4ef'], borderWidth: 0, hoverOffset: 8 }]
+      },
+      options: { responsive: true, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 11 }, usePointStyle: true, pointStyleWidth: 10 } }, tooltip: { callbacks: { label: ctx => ` ${sym}${ctx.parsed.toFixed(2)} (${(ctx.parsed / totalC * 100).toFixed(1)}%)` } } } }
+    });
+
+    const barData = ['a','b','c'].map(k => optCalc(k).each);
+    barChart = new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Option A\n6 months', 'Option B\n9 months', 'Option C\n12 months'],
+        datasets: [
+          { label: 'Your share', data: [...barData], backgroundColor: ['rgba(231,76,60,0.7)','rgba(243,156,18,0.7)','rgba(39,174,96,0.7)'], borderRadius: 4 },
+          { label: "Wife's share", data: [...barData], backgroundColor: ['rgba(231,76,60,0.35)','rgba(243,156,18,0.35)','rgba(39,174,96,0.35)'], borderRadius: 4 }
+        ]
+      },
+      options: { responsive: true, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, ticks: { callback: v => sym + v }, title: { display: true, text: `Per Fortnight (${cur})`, font: { size: 11 } } } }, plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 11 }, usePointStyle: true, pointStyleWidth: 10 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${sym}${ctx.parsed.y.toFixed(2)}` } } } }
+    });
+
+    function pd(key) {
+      const o = optCalc(key);
+      const pts = [{ x: 0, y: totalC }]; let b = totalC;
+      for (let i = 1; i <= o.fortnights; i++) { if (i < o.fortnights) { b = Math.round((b - o.payment) * 100) / 100; } else { b = 0; } pts.push({ x: i, y: b }); }
+      return pts;
+    }
+    lineChart = new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: { datasets: ['a','b','c'].map(k => ({ label: OPT_DEF[k].label, data: pd(k), borderColor: OPT_DEF[k].color, backgroundColor: OPT_DEF[k].color + '18', fill: true, tension: 0.2, pointRadius: 3, pointHoverRadius: 6, borderWidth: 2.5 })) },
+      options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, scales: { x: { type: 'linear', title: { display: true, text: 'Fortnight #', font: { size: 11 } }, ticks: { stepSize: 2 }, grid: { color: '#f0f0f0' }, min: 0, max: 27 }, y: { beginAtZero: true, title: { display: true, text: `Remaining Balance (${cur})`, font: { size: 11 } }, ticks: { callback: v => sym + v.toLocaleString() }, grid: { color: '#f0f0f0' } } }, plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 11 }, usePointStyle: true, pointStyleWidth: 10 } }, tooltip: { callbacks: { title: ctx => `Fortnight ${ctx[0].parsed.x}`, label: ctx => ` ${ctx.dataset.label}: ${sym}${ctx.parsed.y.toFixed(2)} remaining` } } } }
+    });
+  }
+
+  // ===== INIT =====
+  fetchRate().then(() => { renderAll(); pickSimple('c'); });
+</script>
+
+</body>
+</html>
