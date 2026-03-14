@@ -276,6 +276,82 @@ h3{font-size:1.3rem;line-height:1.3}
   .flight-card.cathay,.flight-card.ita{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .card,.flight-card,.phase-card,.check-card,.option-card{box-shadow:none;border:1px solid #ddd}
 }
+
+/* ===== BISMILLAH ===== */
+.bismillah{font-size:1rem;color:rgba(255,255,255,.35);margin-bottom:16px;position:relative;letter-spacing:1px;font-family:var(--font-heading)}
+
+/* ===== DEDICATION ===== */
+.dedication{font-family:var(--font-heading);font-style:italic;font-size:1.1rem;color:rgba(255,255,255,.65);margin-bottom:24px;position:relative;font-weight:400}
+
+/* ===== WHY THIS TRIP CARD ===== */
+.letter-card{background:linear-gradient(135deg,#1a1a3e,#2d2b55);border:1px solid rgba(201,168,124,.25);border-radius:var(--radius);padding:40px 36px;margin:0 auto 40px;max-width:800px;position:relative;overflow:hidden}
+.letter-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(201,168,124,.12) 0%,transparent 70%);pointer-events:none}
+.letter-card::after{content:'';position:absolute;bottom:-40px;left:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(201,168,124,.08) 0%,transparent 70%);pointer-events:none}
+.letter-card h3{font-family:var(--font-heading);font-size:1.4rem;color:var(--clr-gold);margin-bottom:16px;font-weight:600}
+.letter-card p{font-family:var(--font-heading);font-style:italic;font-size:1.05rem;line-height:1.75;color:var(--clr-gold-light);position:relative}
+
+/* ===== SCRATCH CARDS ===== */
+.scratch-card{position:relative;border-radius:var(--radius);overflow:hidden;margin:24px 0;min-height:100px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.scratch-content{padding:24px;text-align:center}
+.scratch-content.love{background:linear-gradient(135deg,#1a1a3e,#2d2b55);color:var(--clr-gold-light);border:1px solid rgba(201,168,124,.2);border-radius:var(--radius)}
+.scratch-content .sc-label{font-family:var(--font-heading);font-weight:500;font-size:.95rem;margin-bottom:8px;color:var(--clr-gold)}
+.scratch-content .sc-msg{font-family:var(--font-heading);font-style:italic;font-size:1rem;line-height:1.6}
+.scratch-overlay{position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.scratch-overlay canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.scratch-hint{position:relative;z-index:3;color:#fff;font-family:var(--font-heading);font-size:1rem;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.3);pointer-events:none;animation:shimmer 2s ease-in-out infinite}
+.scratch-hint-sub{position:relative;z-index:3;color:rgba(255,255,255,.7);font-size:.8rem;font-weight:500;pointer-events:none}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.5}}
+.scratch-card.revealed .scratch-overlay{opacity:0;pointer-events:none;transition:opacity .5s}
+
+/* ===== WEATHER CARDS ===== */
+.weather-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#f8f6f1,#f0ecf5);border-radius:var(--radius);padding:18px 24px;margin-bottom:20px;flex-wrap:wrap}
+.weather-icon{font-size:2.2rem;flex-shrink:0}
+.weather-info{flex:1;min-width:0}
+.weather-temp{font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--clr-dark)}
+.weather-details{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.weather-detail{font-size:.82rem;color:var(--clr-muted);font-weight:500;padding:2px 10px;background:rgba(0,0,0,.04);border-radius:20px}
+
+/* ===== CURRENCY REFERENCE ===== */
+.currency-ref{background:linear-gradient(135deg,#f8f6f1,#f0ecf5);border-radius:var(--radius);padding:24px 28px;margin:32px auto 0;max-width:600px}
+.currency-ref h4{font-family:var(--font-heading);font-size:1.15rem;color:var(--clr-dark);margin-bottom:12px;text-align:center}
+.curr-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.9rem}
+.curr-row:last-of-type{border-bottom:none}
+.curr-flag{font-size:1.1rem;margin-right:6px}
+.curr-note{font-size:.78rem;color:var(--clr-muted);text-align:center;margin-top:10px;font-style:italic}
+
+/* ===== FUN FACTS ===== */
+.fun-fact{background:linear-gradient(135deg,#faf7f2,#f5f0e8);border:1px solid rgba(201,168,124,.2);border-radius:var(--radius-sm);margin:10px 0;overflow:hidden;transition:var(--transition)}
+.fun-fact-header{display:flex;align-items:center;gap:8px;padding:14px 18px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--clr-dark)}
+.fun-fact-header .ff-icon{font-size:1.1rem}
+.fun-fact-header .ff-label{color:var(--clr-gold);font-family:var(--font-body);font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.fun-fact-header .ff-toggle{margin-left:auto;font-size:.8rem;color:var(--clr-muted);transition:transform .3s}
+.fun-fact.open .ff-toggle{transform:rotate(180deg)}
+.fun-fact-body{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 18px}
+.fun-fact.open .fun-fact-body{max-height:200px;padding:0 18px 14px}
+.fun-fact-body p{font-size:.88rem;color:#555;line-height:1.55}
+
+/* ===== PACKING CHECKLIST ===== */
+.packing-progress{text-align:center;margin-bottom:20px}
+.packing-progress .pp-count{font-family:var(--font-heading);font-size:1.6rem;font-weight:700;color:var(--clr-dark)}
+.packing-progress .pp-label{font-size:.85rem;color:var(--clr-muted)}
+.packing-category{background:var(--clr-card);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:24px;margin-bottom:16px}
+.packing-category h4{font-family:var(--font-heading);font-size:1.15rem;color:var(--clr-dark);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.pack-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);cursor:pointer;transition:var(--transition);font-size:.9rem;color:#444}
+.pack-item:last-child{border-bottom:none}
+.pack-item:hover{color:var(--clr-dark)}
+.pack-item.packed{color:var(--clr-muted)}
+.pack-item.packed .pack-label{text-decoration:line-through}
+.pack-check{width:20px;height:20px;border:2px solid var(--clr-muted);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.75rem;color:transparent;transition:var(--transition)}
+.pack-item.packed .pack-check{background:var(--clr-gold);border-color:var(--clr-gold);color:var(--clr-dark)}
+.pack-label{flex:1}
+
+/* ===== MEMORIES ===== */
+.memory-card{background:linear-gradient(135deg,#faf7f2,#f5f0e8);border:1px solid rgba(201,168,124,.2);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.memory-card h4{font-family:var(--font-heading);font-size:1.15rem;color:var(--clr-dark);margin-bottom:4px}
+.memory-card .mem-dates{font-size:.82rem;color:var(--clr-muted);margin-bottom:12px}
+.memory-card textarea{width:100%;min-height:100px;border:1px solid rgba(0,0,0,.1);border-radius:var(--radius-sm);padding:14px;font-family:var(--font-body);font-size:.9rem;line-height:1.6;color:#333;background:rgba(255,255,255,.7);resize:vertical;transition:border-color .3s}
+.memory-card textarea:focus{outline:none;border-color:var(--clr-gold)}
+.memory-card textarea::placeholder{color:var(--clr-muted);font-style:italic}
 </style>
 </head>
 <body>
@@ -294,8 +370,10 @@ h3{font-size:1.3rem;line-height:1.3}
 <!-- ===== TAB 1: OUR TRIP ===== -->
 <div id="tab-trip" class="tab-content active">
   <section class="hero">
+    <div class="bismillah">&#x0628;&#x0633;&#x0645; &#x0627;&#x0644;&#x0644;&#x0647; &#x0627;&#x0644;&#x0631;&#x062D;&#x0645;&#x0646; &#x0627;&#x0644;&#x0631;&#x062D;&#x064A;&#x0645;</div>
     <h1>Ibrahim &amp; Haajar's<br>Mediterranean Journey</h1>
     <p class="subtitle">Auckland &middot; Milan &middot; Tunisia &middot; Libya &middot; Home</p>
+    <p class="dedication">For Haajar &mdash; who's about to see the Mediterranean through new eyes &#x1F495;</p>
     <div class="couple-badge">&#x1F491; Ibrahim &amp; Haajar</div>
     <div class="countdown-grid" id="countdown">
       <div class="cd-unit"><span class="num" id="cd-days">--</span><span class="lbl">Days</span></div>
@@ -305,6 +383,13 @@ h3{font-size:1.3rem;line-height:1.3}
     </div>
     <button class="scroll-btn" onclick="document.getElementById('route-timeline').scrollIntoView({behavior:'smooth'})" aria-label="Scroll down">&darr;</button>
   </section>
+
+  <div class="container">
+    <div class="letter-card" style="margin-top:40px">
+      <h3>Why This Trip</h3>
+      <p>This trip is more than flights and hotels. It&rsquo;s Ibrahim meeting Haajar&rsquo;s family in Shahhat for the first time. It&rsquo;s Haajar discovering Tunisia &mdash; a country she&rsquo;s never visited despite growing up just next door. It&rsquo;s two days with mama, papa, and Yasmeen exploring Milan together. And it&rsquo;s the two of us, hand in hand, navigating three countries, two continents, and one unforgettable summer.</p>
+    </div>
+  </div>
 
   <div class="container" id="route-timeline">
     <div class="section-header">
@@ -354,6 +439,14 @@ h3{font-size:1.3rem;line-height:1.3}
         <div class="phase-people">MXP &rarr; HKG &rarr; AKL</div>
         <div class="phase-stay">Cathay Pacific &mdash; Economy Essential</div>
       </div>
+    </div>
+
+    <div class="currency-ref">
+      <h4>Currency Quick Reference</h4>
+      <div class="curr-row"><span><span class="curr-flag">&#x1F1F3;&#x1F1FF;</span> 1 NZD</span><span>&asymp; 0.55 EUR <span style="color:var(--clr-muted);font-size:.8rem">(Milan)</span></span></div>
+      <div class="curr-row"><span><span class="curr-flag">&#x1F1F3;&#x1F1FF;</span> 1 NZD</span><span>&asymp; 1.72 TND <span style="color:var(--clr-muted);font-size:.8rem">(Tunisia)</span></span></div>
+      <div class="curr-row"><span><span class="curr-flag">&#x1F1F3;&#x1F1FF;</span> 1 NZD</span><span>&asymp; 2.95 LYD <span style="color:var(--clr-muted);font-size:.8rem">(Libya)</span></span></div>
+      <p class="curr-note">Approximate rates &mdash; check before travel</p>
     </div>
   </div>
 </div>
@@ -531,6 +624,8 @@ h3{font-size:1.3rem;line-height:1.3}
       <button class="sub-tab active" data-guide="tunisia">&#x1F1F9;&#x1F1F3; Tunisia</button>
       <button class="sub-tab" data-guide="libya">&#x1F1F1;&#x1F1FE; Libya</button>
       <button class="sub-tab" data-guide="milan">&#x1F1EE;&#x1F1F9; Milan</button>
+      <button class="sub-tab" data-guide="packing">&#x1F9F3; Packing</button>
+      <button class="sub-tab" data-guide="memories">&#x1F4F8; Memories</button>
     </div>
 
     <!-- Tunisia guide -->
@@ -539,9 +634,12 @@ h3{font-size:1.3rem;line-height:1.3}
         <h3>Discovering Tunisia</h3>
         <p class="subtitle">Haajar's First Visit &middot; Tunis &amp; Beni Khiar &middot; Jul 27 &ndash; Aug 10</p>
       </div>
+      <div id="tunisia-weather"></div>
       <div class="progress-wrap" id="tunisia-progress"></div>
       <div class="checklist-grid" id="tunisia-checklist"></div>
+      <div id="tunisia-funfacts"></div>
       <div class="tips-card" id="tunisia-tips"></div>
+      <div id="tunisia-scratch"></div>
     </div>
 
     <!-- Libya guide -->
@@ -551,9 +649,12 @@ h3{font-size:1.3rem;line-height:1.3}
         <p class="subtitle">Shahhat &middot; Jabal Akhdar &middot; Cyrenaica &middot; Aug 10 &ndash; Sep 2</p>
         <p class="subtitle" style="margin-top:6px;font-size:.88rem">Round trip: Tunis &rarr; Libya (Aug 10) &amp; Libya &rarr; Tunis (Sep 2), then Tunis &rarr; Milan (Sep 3)</p>
       </div>
+      <div id="libya-weather"></div>
       <div class="progress-wrap" id="libya-progress"></div>
       <div class="checklist-grid" id="libya-checklist"></div>
+      <div id="libya-funfacts"></div>
       <div class="tips-card" id="libya-tips"></div>
+      <div id="libya-scratch"></div>
     </div>
 
     <!-- Milan guide -->
@@ -562,9 +663,31 @@ h3{font-size:1.3rem;line-height:1.3}
         <h3>Milan &mdash; La Dolce Vita</h3>
         <p class="subtitle">Family Time &middot; Jul 25&ndash;27 &amp; Sep 3&ndash;4</p>
       </div>
+      <div id="milan-weather"></div>
       <div class="progress-wrap" id="milan-progress"></div>
       <div class="checklist-grid" id="milan-checklist"></div>
+      <div id="milan-funfacts"></div>
       <div class="tips-card" id="milan-tips"></div>
+      <div id="milan-scratch"></div>
+    </div>
+
+    <!-- Packing guide -->
+    <div class="guide-panel" id="guide-packing">
+      <div class="guide-header">
+        <h3>Packing Checklist</h3>
+        <p class="subtitle">Everything you need for six weeks away</p>
+      </div>
+      <div class="packing-progress" id="packing-progress"></div>
+      <div id="packing-list"></div>
+    </div>
+
+    <!-- Memories -->
+    <div class="guide-panel" id="guide-memories">
+      <div class="guide-header">
+        <h3>Travel Memories</h3>
+        <p class="subtitle">Write down your favourite moments</p>
+      </div>
+      <div id="memories-list"></div>
     </div>
 
   </div>
@@ -1256,6 +1379,294 @@ function buildCalendar() {
 }
 
 /* ========================================================
+   WEATHER CARDS
+   ======================================================== */
+function buildWeatherCards() {
+  const weatherData = {
+    tunisia: { icon: '\u2600\uFE0F', temp: '32\u201338\u00b0C', details: ['Hot & sunny', 'Sea temp ~26\u00b0C', 'UV very high'] },
+    libya:   { icon: '\u26C5',       temp: '25\u201332\u00b0C', details: ['Cooler in mountains', 'Evenings ~20\u00b0C', 'Dry'] },
+    milan:   { icon: '\uD83C\uDF24\uFE0F', temp: '30\u201335\u00b0C', details: ['Hot & humid', 'Afternoon thunderstorms possible'] }
+  };
+  for (const [key, w] of Object.entries(weatherData)) {
+    const el = document.getElementById(key + '-weather');
+    if (!el) continue;
+    el.innerHTML = `<div class="weather-card">
+      <div class="weather-icon">${w.icon}</div>
+      <div class="weather-info">
+        <div class="weather-temp">${w.temp}</div>
+        <div class="weather-details">${w.details.map(d => `<span class="weather-detail">${d}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  }
+}
+
+/* ========================================================
+   FUN FACTS
+   ======================================================== */
+const FUN_FACTS = {
+  tunisia: [
+    'Tunisia has more UNESCO World Heritage Sites (8) than any other country in Africa. You\u2019ll visit at least 3 of them!',
+    'The Star Wars planet Tatooine was named after the real Tunisian town of Tataouine. Several scenes were filmed in southern Tunisia.'
+  ],
+  libya: [
+    'Cyrene was founded in 631 BC \u2014 it\u2019s older than Rome! The ancient Greeks considered it one of the most important cities in the world.',
+    'Jabal Akhdar receives more rainfall than most of Libya combined. It\u2019s one of the greenest places in North Africa.'
+  ],
+  milan: [
+    'Milan\u2019s Duomo took nearly 600 years to complete (1386\u20131965). That\u2019s longer than any other cathedral in Europe.',
+    'The Galleria Vittorio Emanuele II has a tradition: spin three times on the bull\u2019s mosaic with your heel for good luck. The bull has a permanent hole worn into it!'
+  ]
+};
+
+function buildFunFacts() {
+  for (const [key, facts] of Object.entries(FUN_FACTS)) {
+    const el = document.getElementById(key + '-funfacts');
+    if (!el) continue;
+    el.innerHTML = facts.map((fact, i) => `
+      <div class="fun-fact" data-ff="${key}-${i}">
+        <div class="fun-fact-header">
+          <span class="ff-icon">\uD83D\uDCA1</span>
+          <span class="ff-label">Fun Fact</span>
+          <span class="ff-toggle">\u25BC</span>
+        </div>
+        <div class="fun-fact-body"><p>${fact}</p></div>
+      </div>
+    `).join('');
+  }
+  document.querySelectorAll('.fun-fact-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.parentElement.classList.toggle('open');
+    });
+  });
+}
+
+/* ========================================================
+   SCRATCH CARDS
+   ======================================================== */
+const SCRATCH_MESSAGES = {
+  tunisia: { label: 'A message for you\u2026', msg: 'I can\u2019t wait to watch the sunset with you in Sidi Bou Said, share bambalouni on the beach, and get completely lost in the medina together. This is going to be magic. \u2014 Ibrahim \uD83D\uDC99' },
+  libya:   { label: 'A message for you\u2026', msg: 'Meeting your family, seeing where you grew up, eating your mama\u2019s cooking \u2014 I\u2019ve been dreaming about this since you first told me about Shahhat. Thank you for bringing me home with you. \u2014 Ibrahim \uD83E\uDD0D' },
+  milan:   { label: 'A message for you\u2026', msg: 'Our first trip together with the whole family. I already know papa will order too much gelato and Yasmeen won\u2019t stop taking photos. I wouldn\u2019t have it any other way. \u2014 Ibrahim \uD83D\uDC9B' }
+};
+
+function buildScratchCards() {
+  for (const [key, data] of Object.entries(SCRATCH_MESSAGES)) {
+    const el = document.getElementById(key + '-scratch');
+    if (!el) continue;
+    el.innerHTML = `
+      <div class="scratch-card" data-scratch="${key}">
+        <div class="scratch-content love">
+          <div class="sc-label">${data.label}</div>
+          <div class="sc-msg">${data.msg}</div>
+        </div>
+        <div class="scratch-overlay">
+          <canvas></canvas>
+          <span class="scratch-hint">\u2728 Scratch to reveal \u2728</span>
+          <span class="scratch-hint-sub">Drag your finger or mouse</span>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function initScratchCards() {
+  document.querySelectorAll('.scratch-card').forEach(card => {
+    const canvas = card.querySelector('canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let scratching = false;
+
+    function resize() {
+      canvas.width = card.offsetWidth;
+      canvas.height = card.offsetHeight;
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, '#c9a87c');
+      grad.addColorStop(0.5, '#b8956a');
+      grad.addColorStop(1, '#a07850');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    resize();
+    window.addEventListener('resize', () => { if (!card.classList.contains('revealed')) resize(); });
+
+    function scratch(x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 28, 0, Math.PI * 2);
+      ctx.fill();
+      checkReveal();
+    }
+
+    function checkReveal() {
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      let clear = 0;
+      for (let i = 3; i < data.length; i += 16) { if (data[i] === 0) clear++; }
+      if (clear / (data.length / 16) > 0.35) {
+        card.classList.add('revealed');
+      }
+    }
+
+    function getPos(e) {
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches ? e.touches[0] : e;
+      return { x: t.clientX - r.left, y: t.clientY - r.top };
+    }
+
+    canvas.addEventListener('mousedown', e => { scratching = true; scratch(getPos(e).x, getPos(e).y); });
+    canvas.addEventListener('mousemove', e => { if (scratching) scratch(getPos(e).x, getPos(e).y); });
+    canvas.addEventListener('mouseup', () => scratching = false);
+    canvas.addEventListener('mouseleave', () => scratching = false);
+    canvas.addEventListener('touchstart', e => { scratching = true; const p = getPos(e); scratch(p.x, p.y); e.preventDefault(); }, {passive:false});
+    canvas.addEventListener('touchmove', e => { if (scratching) { const p = getPos(e); scratch(p.x, p.y); } e.preventDefault(); }, {passive:false});
+    canvas.addEventListener('touchend', () => scratching = false);
+  });
+}
+
+/* ========================================================
+   PACKING CHECKLIST
+   ======================================================== */
+const PACKING_DATA = [
+  { category: 'Documents & Money', emoji: '\uD83D\uDCCB', items: [
+    'Passports (check expiry dates!)',
+    'Travel insurance documents',
+    'Flight booking confirmations (on phone)',
+    'Hotel confirmation',
+    'Cash: EUR for Milan, TND for Tunisia, USD for Libya exchange',
+    'Credit/debit cards (notify bank of travel)',
+    'Copies of important docs (email to self)'
+  ]},
+  { category: 'Clothing \u2014 Hot Weather', emoji: '\uD83D\uDC55', items: [
+    'Lightweight long trousers (\u00d73\u20134)',
+    'Light cotton/linen shirts (\u00d75\u20136)',
+    'Light scarf/shawl for mosques & sun (Haajar)',
+    'Comfortable walking shoes',
+    'Sandals/flip flops for beach',
+    'Swimwear',
+    'Light jacket for Jabal Akhdar evenings',
+    'Sleepwear',
+    'Underwear & socks (\u00d77\u20138)',
+    'Modest outfit for family visits in Libya'
+  ]},
+  { category: 'Toiletries & Health', emoji: '\uD83E\uDDF4', items: [
+    'Sunscreen (SPF 50 \u2014 essential!)',
+    'Insect repellent',
+    'Any prescription medications',
+    'First aid basics (plasters, paracetamol)',
+    'Hand sanitizer',
+    'Toothbrush & toothpaste',
+    'Deodorant',
+    'Shampoo & conditioner',
+    'Razor'
+  ]},
+  { category: 'Tech & Gadgets', emoji: '\uD83D\uDD0C', items: [
+    'Phone chargers & cables',
+    'Universal power adapter (Type C/L for Italy, Type C/E for Tunisia)',
+    'Portable power bank',
+    'Camera (if bringing one)',
+    'Headphones for flights'
+  ]},
+  { category: 'Travel Comfort', emoji: '\u2708\uFE0F', items: [
+    'Neck pillow for long flights',
+    'Eye mask & earplugs',
+    'Reusable water bottle',
+    'Snacks for flights',
+    'Travel-size prayer mat',
+    'Small daypack/backpack'
+  ]}
+];
+
+function buildPackingList() {
+  const container = document.getElementById('packing-list');
+  const progressEl = document.getElementById('packing-progress');
+  if (!container || !progressEl) return;
+
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('trip-packing')) || {}; } catch { /* ignore */ }
+
+  function save() {
+    localStorage.setItem('trip-packing', JSON.stringify(saved));
+  }
+
+  function render() {
+    let totalItems = 0, packedItems = 0;
+    PACKING_DATA.forEach(cat => cat.items.forEach(item => {
+      totalItems++;
+      if (saved[item]) packedItems++;
+    }));
+
+    progressEl.innerHTML = `
+      <div class="pp-count">${packedItems} of ${totalItems} packed</div>
+      <div class="pp-label">items ready to go</div>
+      <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:${Math.round((packedItems/totalItems)*100)}%"></div></div>
+    `;
+
+    container.innerHTML = '';
+    PACKING_DATA.forEach(cat => {
+      const catEl = document.createElement('div');
+      catEl.className = 'packing-category';
+      let itemsHTML = cat.items.map(item => {
+        const packed = saved[item] || false;
+        return `<div class="pack-item${packed ? ' packed' : ''}" data-pack-item="${item}">
+          <div class="pack-check">${packed ? '\u2713' : ''}</div>
+          <div class="pack-label">${item}</div>
+        </div>`;
+      }).join('');
+      catEl.innerHTML = `<h4>${cat.emoji} ${cat.category}</h4>${itemsHTML}`;
+      container.appendChild(catEl);
+    });
+
+    container.querySelectorAll('.pack-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const item = el.dataset.packItem;
+        saved[item] = !saved[item];
+        save();
+        render();
+      });
+    });
+  }
+
+  render();
+}
+
+/* ========================================================
+   MEMORIES
+   ======================================================== */
+const MEMORY_PHASES = [
+  { id: 'milan-family', label: 'Milan with Family', dates: 'Jul 25\u201327' },
+  { id: 'tunisia-adventures', label: 'Tunisia \u2014 Tunis & Beni Khiar', dates: 'Jul 27 \u2013 Aug 10' },
+  { id: 'libya-shahhat', label: 'Libya \u2014 Shahhat & Jabal Akhdar', dates: 'Aug 10 \u2013 Sep 2' },
+  { id: 'back-tunisia', label: 'Back to Tunisia', dates: 'Sep 2\u20133' },
+  { id: 'journey-home', label: 'The Journey Home', dates: 'Sep 4\u20136' }
+];
+
+function buildMemories() {
+  const container = document.getElementById('memories-list');
+  if (!container) return;
+
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('trip-memories')) || {}; } catch { /* ignore */ }
+
+  container.innerHTML = '';
+  MEMORY_PHASES.forEach(phase => {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.innerHTML = `
+      <h4>${phase.label}</h4>
+      <div class="mem-dates">${phase.dates}</div>
+      <textarea placeholder="Write your memories here\u2026" data-mem-id="${phase.id}">${saved[phase.id] || ''}</textarea>
+    `;
+    container.appendChild(card);
+  });
+
+  container.querySelectorAll('textarea').forEach(ta => {
+    ta.addEventListener('input', () => {
+      saved[ta.dataset.memId] = ta.value;
+      localStorage.setItem('trip-memories', JSON.stringify(saved));
+    });
+  });
+}
+
+/* ========================================================
    INIT
    ======================================================== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1264,6 +1675,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateCountdown, 1000);
   initCarousels();
 
+  buildWeatherCards();
+
   buildChecklist('tunisia-checklist', 'tunisia-progress', TUNISIA_ITEMS, 'trip-checklist-tunisia');
   buildChecklist('libya-checklist', 'libya-progress', LIBYA_ITEMS, 'trip-checklist-libya');
   buildChecklist('milan-checklist', 'milan-progress', MILAN_ITEMS, 'trip-checklist-milan');
@@ -1271,6 +1684,12 @@ document.addEventListener('DOMContentLoaded', () => {
   buildTips('tunisia-tips', TUNISIA_TIPS);
   buildTips('libya-tips', LIBYA_TIPS);
   buildTips('milan-tips', MILAN_TIPS);
+
+  buildFunFacts();
+  buildScratchCards();
+  initScratchCards();
+  buildPackingList();
+  buildMemories();
 
   buildCalendar();
   initBudgetControls();
